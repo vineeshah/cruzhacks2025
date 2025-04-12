@@ -37,36 +37,46 @@ class GooglePlacesService:
             return []
 
     def search_places(self, location, radius, user_preferences=None):
-        """Search for places near a location"""
+        """Search for places near a location with optional user preferences filtering"""
         try:
-            # Create search criteria based on user preferences
+            print(f"\nSearching places with location: {location}, radius: {radius}")
+            print(f"User preferences: {user_preferences}")
+            
+            # Convert location to tuple if it's a string
+            if isinstance(location, str):
+                lat, lng = map(float, location.split(','))
+                location = (lat, lng)
+            
+            # Convert radius to meters if it's in miles
+            if radius > 100:  # Assuming radius > 100 means it's in miles
+                radius = int(radius * 1609.34)  # Convert miles to meters
+            
+            # Create search criteria
             search_criteria = {
                 'location': location,
                 'radius': radius,
-                'type': 'restaurant'
+                'type': 'restaurant',
+                'language': 'en'
             }
             
+            # Add keyword based on user preferences
             if user_preferences:
-                # Add dietary restrictions to search
-                if 'dietary_restrictions' in user_preferences:
-                    restrictions = user_preferences['dietary_restrictions']
-                    if 'vegetarian' in restrictions:
-                        search_criteria['keyword'] = 'vegetarian restaurant'
-                    elif 'vegan' in restrictions:
-                        search_criteria['keyword'] = 'vegan restaurant'
-                    elif 'gluten-free' in restrictions:
-                        search_criteria['keyword'] = 'gluten free restaurant'
-                
-                # Add health-focused keywords
                 if 'health_goals' in user_preferences:
-                    goals = user_preferences['health_goals']
-                    if 'weight_loss' in goals:
-                        search_criteria['keyword'] = 'healthy restaurant'
-                    elif 'muscle_gain' in goals:
-                        search_criteria['keyword'] = 'protein restaurant'
+                    health_goals = user_preferences['health_goals']
+                    if 'Vegetarian' in health_goals:
+                        search_criteria['keyword'] = 'vegetarian'
+                    elif 'Vegan' in health_goals:
+                        search_criteria['keyword'] = 'vegan'
+                    elif 'Gluten-Free' in health_goals:
+                        search_criteria['keyword'] = 'gluten free'
+                    elif 'Low Carb' in health_goals:
+                        search_criteria['keyword'] = 'low carb'
+            
+            print(f"Search criteria: {search_criteria}")
             
             # Perform the search
             places = self.client.places_nearby(**search_criteria)
+            print(f"Places response: {places}")
             
             # Format results
             results = []
@@ -81,53 +91,25 @@ class GooglePlacesService:
                 }
                 results.append(result)
             
+            print(f"Found {len(results)} places")
             return results
+            
         except Exception as e:
-            print(f"Error searching places: {str(e)}")
+            print(f"\nError in search_places: {str(e)}")
+            print(f"Error type: {type(e)}")
             return []
 
     def get_place_details(self, place_id):
         """Get detailed information about a place"""
         try:
-            # Get basic place details
-            details = self.client.place(place_id, fields=['name', 'formatted_address', 'geometry', 'rating', 'price_level', 'types', 'website', 'opening_hours'])
-            
-            if not details or 'result' not in details:
-                return None
-            
-            place = details['result']
-            
-            # Get menu data if available
-            menu_items = []
-            if 'website' in place:
-                try:
-                    menu_data = self.client.place(place_id, fields=['menu'])
-                    if menu_data and 'result' in menu_data and 'menu' in menu_data['result']:
-                        menu = menu_data['result']['menu']
-                        if 'items' in menu:
-                            menu_items = [{
-                                'name': item.get('name', ''),
-                                'description': item.get('description', ''),
-                                'price': item.get('price', '')
-                            } for item in menu['items']]
-                except:
-                    pass  # Menu data not available
-            
-            return {
-                "place_id": place_id,
-                "name": place.get('name'),
-                "address": place.get('formatted_address'),
-                "location": place.get('geometry', {}).get('location'),
-                "rating": place.get('rating'),
-                "price_level": place.get('price_level'),
-                "types": place.get('types', []),
-                "website": place.get('website'),
-                "opening_hours": place.get('opening_hours', {}).get('weekday_text', []),
-                "menu_items": menu_items
-            }
+            place = self.client.place(
+                place_id,
+                fields=['name', 'formatted_address', 'rating', 'price_level', 'website', 'opening_hours']
+            )
+            return place.get('result', {})
         except Exception as e:
             print(f"Error getting place details: {str(e)}")
-            return None
+            return {}
 
     # def search_places(self, location, radius, keyword='restaurant'):
     #     """Search for places with menu data"""

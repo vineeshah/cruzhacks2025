@@ -1,20 +1,28 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Homepage from './Containers/Homepage';
-import UserSelectPage from './Containers/UserSelectPage';
+import Login from './Containers/Login';
+import Register from './Containers/Register';
 import WelcomePage from './Containers/WelcomePage';
-import TakeoutPage from './Containers/TakeoutPage';
+import UserSelect from './Containers/UserSelectPage';
+import Takeout from './Containers/TakeoutPage';
+import Navbar from './Components/Navbar';
 import './App.css';
 
 function App() {
     return (
         <div className="App">
-            <Routes>
-                <Route path="/" element={<Homepage />} />
-                <Route path="/welcome" element={<WelcomePage />} />
-                <Route path="/user-select" element={<UserSelectPage />} />
-                <Route path="/takeout" element={<TakeoutPage />} />
-            </Routes>
+            <Navbar />
+            <div className="content">
+                <Routes>
+                    <Route path="/" element={<Homepage />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/welcome" element={<WelcomePage />} />
+                    <Route path="/user-select" element={<UserSelect />} />
+                    <Route path="/takeout" element={<Takeout />} />
+                </Routes>
+            </div>
         </div>
     );
 }

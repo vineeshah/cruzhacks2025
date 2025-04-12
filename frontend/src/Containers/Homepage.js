@@ -17,13 +17,20 @@ const Homepage = () => {
                     </h2>
                 </div>
                 <div className='right-homepage'>
-                    <button 
-                        className='homepage-buttons' 
-                        onClick={() => navigate('/welcome')}
-                    >
-                        Get Started
-                    </button>
-    
+                    <div className='auth-buttons'>
+                        <button 
+                            className='homepage-buttons' 
+                            onClick={() => navigate('/login')}
+                        >
+                            Login
+                        </button>
+                        <button 
+                            className='homepage-buttons' 
+                            onClick={() => navigate('/register')}
+                        >
+                            Register
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

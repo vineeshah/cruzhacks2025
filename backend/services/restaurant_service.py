@@ -90,7 +90,6 @@ class RestaurantService:
         User preferences:
         - Health goals: {user_preferences.get('health_goals', [])}
         - Dietary restrictions: {user_preferences.get('dietary_restrictions', [])}
-        - Budget: {user_preferences.get('budget_preference', 'medium')}
         
         Restaurant menu items:
         {restaurant.get('menu_items', [])}

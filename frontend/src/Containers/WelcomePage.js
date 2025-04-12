@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Logo from '../Components/logo';
 import { useNavigate } from 'react-router-dom';
 import './WelcomePage.css';
@@ -18,8 +18,9 @@ const DietaryGoalCard = ({ goal, description, icon, isSelected, onClick }) => (
 const WelcomePage = () => {
     const navigate = useNavigate();
     const [selectedGoals, setSelectedGoals] = useState([]);
+    const [error, setError] = useState('');
 
-    const dietaryGoals = [
+    const dietaryGoals = useMemo(() => [
         {
             id: 1,
             goal: "Weight Loss",
@@ -68,25 +69,87 @@ const WelcomePage = () => {
             description: "Well-rounded meals with all essential nutrients",
             icon: "🥗"
         }
-    ];
+    ], []);
+
+    useEffect(() => {
+        const fetchUserGoals = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    navigate('/login');
+                    return;
+                }
+
+                const response = await fetch('http://localhost:5000/api/user/profile', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.health_goals && Array.isArray(data.health_goals)) {
+                        setSelectedGoals(data.health_goals);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching user goals:', error);
+            }
+        };
+
+        fetchUserGoals();
+    }, [navigate]); // Only run when component mounts or navigate changes
 
     const toggleGoal = (goalId) => {
         setSelectedGoals(prevSelected => {
-            if (prevSelected.includes(goalId)) {
-                return prevSelected.filter(id => id !== goalId);
+            const goal = dietaryGoals.find(g => g.id === goalId);
+            if (!goal) return prevSelected;
+            
+            if (prevSelected.includes(goal.goal)) {
+                return prevSelected.filter(name => name !== goal.goal);
             } else {
-                return [...prevSelected, goalId];
+                return [...prevSelected, goal.goal];
             }
         });
     };
 
-    const handleContinue = () => {
+    const handleContinue = async () => {
         if (selectedGoals.length === 0) {
-            alert("Please select at least one dietary goal");
+            setError("Please select at least one dietary goal");
             return;
         }
-        // You can pass the selected goals to the next page if needed
-        navigate('/user-select');
+
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                setError("Please login to continue");
+                navigate('/login');
+                return;
+            }
+
+            // Update user preferences
+            const response = await fetch('http://localhost:5000/api/user/preferences', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    health_goals: selectedGoals
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                navigate('/user-select');
+            } else {
+                setError(data.error || "Failed to save preferences. Please try again.");
+            }
+        } catch (error) {
+            console.error('Error saving preferences:', error);
+            setError("An error occurred. Please try again.");
+        }
     };
 
     return (
@@ -95,6 +158,7 @@ const WelcomePage = () => {
             <div className='welcome-content'>
                 <h1>Welcome to Healthify!</h1>
                 <p className="subtitle">Select your health goals (choose all that apply)</p>
+                {error && <div className="error-message">{error}</div>}
                 <div className="dietary-goals-grid">
                     {dietaryGoals.map((goal) => (
                         <DietaryGoalCard
@@ -102,7 +166,7 @@ const WelcomePage = () => {
                             goal={goal.goal}
                             description={goal.description}
                             icon={goal.icon}
-                            isSelected={selectedGoals.includes(goal.id)}
+                            isSelected={selectedGoals.includes(goal.goal)}
                             onClick={() => toggleGoal(goal.id)}
                         />
                     ))}

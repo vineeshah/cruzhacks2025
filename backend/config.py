@@ -1,6 +1,6 @@
 class Config:
     # MongoDB settings
-    MONGO_URI = "mongodb+srv://vineet:sdg82wtCCEmTtgEu@healthy-food-cluster.i2by7vr.mongodb.net/HealthyFoodRecommender?retryWrites=true&w=majority"
+    MONGO_URI = "mongodb+srv://vineet:sdg82wtCCEmTtgEu@healthy-food-cluster.i2by7vr.mongodb.net/HealthyFoodRecommender?retryWrites=true&w=majority&tlsAllowInvalidCertificates=true"
         
     # Gemini API key for AI recommendations
     GEMINI_API_KEY = "AIzaSyA-eZmCOrD5XQ8gHb_RBpD330Ekr0qVII0"

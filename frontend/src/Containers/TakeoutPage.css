@@ -1,21 +1,117 @@
 .takeout-page {
-    width: 100%;
-    height: 100%;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.select-header {
-    padding: 20px;
+.takeout-content {
+    margin-top: 2rem;
+}
+
+.takeout-content h1 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+.loading, .error, .no-restaurants {
     text-align: center;
+    padding: 2rem;
+    font-size: 1.2rem;
+    color: #666;
 }
 
-.restaurant-list {
+.error {
+    color: #dc3545;
+}
+
+.restaurants-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.restaurant-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    transition: transform 0.2s;
+}
+
+.restaurant-card:hover {
+    transform: translateY(-5px);
+}
+
+.restaurant-header {
     display: flex;
-    flex-wrap: wrap; 
-    justify-content: center; 
-    gap: 20px; 
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
 }
 
-.restaurant-popup {
-    flex: 0 0 calc(25% - 20px); 
-    box-sizing: border-box; 
+.restaurant-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.restaurant-rating {
+    background: #f8f9fa;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: bold;
+    color: #ffc107;
+}
+
+.restaurant-address {
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.restaurant-health {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.restaurant-health h4 {
+    margin: 0 0 1rem 0;
+    color: #333;
+}
+
+.restaurant-health ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.restaurant-health li {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 5px;
+}
+
+.restaurant-health li strong {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    .takeout-page {
+        padding: 1rem;
+    }
+    
+    .restaurants-grid {
+        grid-template-columns: 1fr;
+    }
 }
