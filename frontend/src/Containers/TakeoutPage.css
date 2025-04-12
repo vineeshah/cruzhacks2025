@@ -1,0 +1,21 @@
+.takeout-page {
+    width: 100%;
+    height: 100%;
+}
+
+.select-header {
+    padding: 20px;
+    text-align: center;
+}
+
+.restaurant-list {
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: center; 
+    gap: 20px; 
+}
+
+.restaurant-popup {
+    flex: 0 0 calc(25% - 20px); 
+    box-sizing: border-box; 
+}
