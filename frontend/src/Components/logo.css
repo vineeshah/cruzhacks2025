@@ -1,0 +1,13 @@
+.healthify-logo {
+    color: orange;
+    font-size: 2rem;
+    padding-left: 10px;
+}
+
+.header-homepage {
+    width: 100%;
+    height: 10%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}

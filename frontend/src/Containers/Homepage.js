@@ -1,17 +1,14 @@
 import React from 'react';
 import './Homepage.css';
 import { useNavigate } from 'react-router-dom';
+import Logo from '../Components/logo'; 
 
 const Homepage = () => {
-    const navigate = useNavigate(); // Initialize the navigate function
+    const navigate = useNavigate(); 
     
     return (
         <div className='homepage'>
-            <div className='header-homepage'>
-                <h1 className='healthify-logo'>
-                    Healthify
-                </h1>
-            </div>
+            <Logo />
             <div className='content-homepage'>
                 <div className='left-homepage'>
                     <h2 className='homepage-text'>
@@ -22,13 +19,13 @@ const Homepage = () => {
                 <div className='right-homepage'>
                     <button 
                         className='homepage-buttons' 
-                        onClick={() => navigate('/signin')} // Navigate to sign-in page
+                        onClick={() => navigate('/signin')} // change this so it goes to google sign in
                     >
                         Login
                     </button>
                     <button 
                         className='homepage-buttons' 
-                        onClick={() => navigate('/signup')} // Navigate to sign-up page
+                        onClick={() => navigate('/signup')} // same thing as previous comment 
                     >
                         Sign Up
                     </button>

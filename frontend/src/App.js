@@ -1,8 +1,7 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom'; // Import Routes and Route
-import Homepage from './Containers/Homepage'; // Import Homepage component
-import SignIn from './Containers/SignIn'; // Import SignIn component
-import SignUp from './Containers/SignUp'; // Import SignUp component
+import { Routes, Route } from 'react-router-dom'; 
+import Homepage from './Containers/Homepage'; 
+import UserSelectPage from './Containers/UserSelectPage'; 
 import './App.css';
 
 function App() {
@@ -10,8 +9,7 @@ function App() {
     <div className="App">
     <Routes>
         <Route path="/" element={<Homepage />} />
-        <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/user-select" element={<UserSelectPage />} />
     </Routes>
 </div>
   );
