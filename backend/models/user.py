@@ -1,46 +1,57 @@
+from run import mongo
 from bson import ObjectId
-from db import mongo
-from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class User:
     @staticmethod
-    def create(username, email, password_hash=None, health_goals=None, dietary_restrictions=None, budget_preference=None):
-        user = {
-            "username": username,
+    def create(email, password, name=None):
+        """Create a new user"""
+        if User.find_by_email(email):
+            return None
+        
+        user_data = {
             "email": email,
-            "password_hash": password_hash,
-            "health_goals": health_goals or [],
-            "dietary_restrictions": dietary_restrictions or [],
-            "budget_preference": budget_preference or "medium",
-            "favorite_foods": [],
-            "created_at": datetime.utcnow(),
-            "updated_at": datetime.utcnow()
+            "password": generate_password_hash(password),
+            "name": name,
+            "health_goals": [],
+            "dietary_restrictions": []
         }
-        result = mongo.db.users.insert_one(user)
-        user["_id"] = result.inserted_id
-        return user
+        
+        result = mongo.db.users.insert_one(user_data)
+        return User.find_by_id(str(result.inserted_id))
     
     @staticmethod
     def find_by_id(user_id):
-        return mongo.db.users.find_one({"_id": ObjectId(user_id)})
+        """Find a user by ID"""
+        try:
+            user = mongo.db.users.find_one({"_id": ObjectId(user_id)})
+            if user:
+                user['id'] = str(user.pop('_id'))
+            return user
+        except:
+            return None
     
     @staticmethod
     def find_by_email(email):
-        return mongo.db.users.find_one({"email": email})
+        """Find a user by email"""
+        user = mongo.db.users.find_one({"email": email})
+        if user:
+            user['id'] = str(user.pop('_id'))
+        return user
     
     @staticmethod
-    def update(user_id, update_data):
-        update_data["updated_at"] = datetime.utcnow()
-        mongo.db.users.update_one(
-            {"_id": ObjectId(user_id)},
-            {"$set": update_data}
-        )
-        return User.find_by_id(user_id)
+    def verify_password(user, password):
+        """Verify user password"""
+        return check_password_hash(user['password'], password)
     
     @staticmethod
-    def add_favorite_food(user_id, food_item):
-        mongo.db.users.update_one(
-            {"_id": ObjectId(user_id)},
-            {"$addToSet": {"favorite_foods": food_item}}
-        )
-        return User.find_by_id(user_id)
+    def update_preferences(user_id, preferences):
+        """Update user preferences"""
+        try:
+            result = mongo.db.users.update_one(
+                {"_id": ObjectId(user_id)},
+                {"$set": preferences}
+            )
+            return result.modified_count > 0
+        except:
+            return False

@@ -9,6 +9,30 @@ db = mongo.db
 
 class Restaurant:
     @staticmethod
+    def find_by_id(place_id):
+        """Find a restaurant by its Google Places ID"""
+        try:
+            restaurant = mongo.db.restaurants.find_one({"place_id": place_id})
+            if restaurant:
+                restaurant['id'] = str(restaurant.pop('_id'))
+            return restaurant
+        except:
+            return None
+    
+    @staticmethod
+    def create_or_update(place_data):
+        """Create or update a restaurant"""
+        try:
+            result = mongo.db.restaurants.update_one(
+                {"place_id": place_data['place_id']},
+                {"$set": place_data},
+                upsert=True
+            )
+            return result.upserted_id or place_data['place_id']
+        except:
+            return None
+
+    @staticmethod
     def create_from_places(places_data: dict, menu_items: list = None):
         """Create restaurant from Google Places data"""
         restaurant = {
@@ -91,10 +115,6 @@ class Restaurant:
             }
         )
         return Restaurant.find_by_id(restaurant_id)
-    
-    @staticmethod
-    def find_by_id(restaurant_id: str):
-        return db.restaurants.find_one({"_id": ObjectId(restaurant_id)})
     
     @staticmethod
     def find_by_places_id(places_id: str):
