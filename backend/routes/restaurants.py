@@ -9,10 +9,12 @@ restaurant_bp = Blueprint('restaurant', __name__, url_prefix='/api/restaurants')
 places_service = GooglePlacesService()
 rec_service = RecommendationService()
 
-@restaurant_bp.route('/nearby', methods=['GET'])
+@restaurant_bp.route('/search', methods=['GET'])
 @jwt_required()
-def get_nearby_restaurants():
+def search_restaurants():
+    """Search for nearby restaurants and get recommendations"""
     try:
+        # Get search parameters
         lat = float(request.args.get('lat'))
         lng = float(request.args.get('lng'))
         radius = float(request.args.get('radius', 5))  # Default 5km radius
@@ -28,50 +30,15 @@ def get_nearby_restaurants():
             "dietary_restrictions": user.get('dietary_restrictions', [])
         }
         
-        # Get nearby restaurants with user preferences
-        restaurants = places_service.search_places(
-            location=f"{lat},{lng}",
+        # Search for nearby restaurants
+        location = f"{lat},{lng}"
+        places = places_service.search_places(
+            location=location,
             radius=radius * 1000,  # Convert km to meters
             user_preferences=user_preferences
         )
-        return jsonify(restaurants), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 400
-
-@restaurant_bp.route('/<restaurant_id>/menu-health', methods=['GET'])
-@jwt_required()
-def get_menu_health(restaurant_id):
-    try:
-        user_id = get_jwt_identity()
-        health_analysis = rec_service.get_menu_health(restaurant_id, user_id)
-        return jsonify(health_analysis), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@restaurant_bp.route('/search', methods=['GET'])
-@jwt_required()
-def search_restaurants():
-    """Search for restaurants based on location and user preferences"""
-    try:
-        # Get search parameters
-        location = request.args.get('location')
-        radius = int(request.args.get('radius', 5000))  # Default 5km radius
         
-        if not location:
-            return jsonify({"error": "Location is required"}), 400
-        
-        # Get user preferences
-        user_id = get_jwt_identity()
-        user = User.find_by_id(user_id)
-        user_preferences = {
-            "health_goals": user.get('health_goals', []),
-            "dietary_restrictions": user.get('dietary_restrictions', [])
-        }
-        
-        # Search for restaurants
-        places = places_service.search_places(location, radius, user_preferences)
-        
-        # Store and format results
+        # Store and format results with recommendations
         results = []
         for place in places:
             # Get detailed place information
@@ -80,9 +47,13 @@ def search_restaurants():
                 # Store in database
                 restaurant_id = Restaurant.create_or_update(details)
                 if restaurant_id:
+                    # Get health analysis for the restaurant
+                    health_analysis = rec_service.get_menu_health(restaurant_id, user_id)
+                    if health_analysis and 'error' not in health_analysis:
+                        details['health_analysis'] = health_analysis
                     results.append(details)
         
-        return jsonify(results)
+        return jsonify(results), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -107,6 +78,12 @@ def get_restaurant(place_id):
                 return jsonify({"error": "Failed to store restaurant data"}), 500
             
             restaurant = details
+        
+        # Get health analysis for the restaurant
+        user_id = get_jwt_identity()
+        health_analysis = rec_service.get_menu_health(place_id, user_id)
+        if health_analysis and 'error' not in health_analysis:
+            restaurant['health_analysis'] = health_analysis
         
         return jsonify(restaurant)
     except Exception as e:
