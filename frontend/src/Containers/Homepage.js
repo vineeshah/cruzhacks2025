@@ -19,9 +19,9 @@ const Homepage = () => {
                 <div className='right-homepage'>
                     <button 
                         className='homepage-buttons' 
-                        onClick={() => navigate('/user-goals')} // change this so it goes to google sign in
+                        onClick={() => navigate('/welcome')}
                     >
-                        Get started!
+                        Get Started
                     </button>
     
                 </div>

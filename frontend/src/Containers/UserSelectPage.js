@@ -1,28 +1,76 @@
-import React from 'react';
-import Logo from '../Components/logo'; 
-import OptionCard from '../Components/option-card';
+import React, { useState } from 'react';
+import Logo from '../Components/logo';
+import { useNavigate } from 'react-router-dom';
+import './UserSelectPage.css';
+
+const FoodOptionCard = ({ title, description, icon, isSelected, onClick }) => (
+    <div 
+        className={`food-option-card ${isSelected ? 'selected' : ''}`}
+        onClick={onClick}
+    >
+        <div className="food-icon">{icon}</div>
+        <h3>{title}</h3>
+        <p>{description}</p>
+        {isSelected && <div className="selected-check">✓</div>}
+    </div>
+);
 
 const UserSelectPage = () => {
+    const navigate = useNavigate();
+    const [selectedOption, setSelectedOption] = useState(null);
+
+    const foodOptions = [
+        {
+            id: 'takeout',
+            title: "Takeout",
+            description: "Find healthy options from restaurants near you",
+            icon: "🥡"
+        },
+        {
+            id: 'cooking',
+            title: "Home Cooking",
+            description: "Discover nutritious recipes you can make at home",
+            icon: "👩‍🍳"
+        }
+    ];
+
+    const handleOptionSelect = (optionId) => {
+        setSelectedOption(optionId);
+    };
+
+    const handleContinue = () => {
+        if (!selectedOption) {
+            alert("Please select an option to continue");
+            return;
+        }
+        // Navigate to the appropriate page based on selection
+        navigate(`/${selectedOption}`);
+    };
 
     return (
         <div className='user-select-page'>
             <Logo />
-            <div className='user-select-options'>
-                <OptionCard
-                title='I want takeout'
-                imageSrc="https://via.placeholder.com/150" 
-                targetPath="/takeout-help" 
-                />
-                <OptionCard
-                title='I want to cook'
-                imageSrc="https://via.placeholder.com/150" 
-                targetPath="/cooking-help" 
-                />
-                <OptionCard
-                title='Health Advice (AI)'
-                imageSrc="https://via.placeholder.com/150" 
-                targetPath="/health-advice" 
-                />
+            <div className='user-select-content'>
+                <h1>What would you like to eat?</h1>
+                <p className="subtitle">Choose your preferred dining option</p>
+                <div className="food-options-container">
+                    {foodOptions.map((option) => (
+                        <FoodOptionCard
+                            key={option.id}
+                            title={option.title}
+                            description={option.description}
+                            icon={option.icon}
+                            isSelected={selectedOption === option.id}
+                            onClick={() => handleOptionSelect(option.id)}
+                        />
+                    ))}
+                </div>
+                <button 
+                    className={`continue-button ${selectedOption ? 'active' : ''}`}
+                    onClick={handleContinue}
+                >
+                    Continue
+                </button>
             </div>
         </div>
     );
