@@ -4,7 +4,7 @@ const Logo = () => {
     return (
     <div className='header-homepage'>
         <h1 className='healthify-logo'>
-            Healthify
+            IdealMeal
         </h1>
     </div>
     );

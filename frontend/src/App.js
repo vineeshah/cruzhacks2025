@@ -6,13 +6,11 @@ import Register from './Containers/Register';
 import WelcomePage from './Containers/WelcomePage';
 import UserSelect from './Containers/UserSelectPage';
 import Takeout from './Containers/TakeoutPage';
-import Navbar from './Components/Navbar';
 import './App.css';
 
 function App() {
     return (
         <div className="App">
-            <Navbar />
             <div className="content">
                 <Routes>
                     <Route path="/" element={<Homepage />} />
