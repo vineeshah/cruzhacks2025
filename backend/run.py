@@ -23,6 +23,11 @@ def create_app():
     jwt = JWTManager(app)
     CORS(app)
 
+    # Add a test route
+    @app.route('/test', methods=['GET'])
+    def test():
+        return jsonify({"message": "Server is working!"}), 200
+
     # Import and register blueprints
     from routes.auth import auth_bp
     from routes.food import food_bp

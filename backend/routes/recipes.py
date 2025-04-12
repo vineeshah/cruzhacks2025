@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from services.recs import RecommendationService
+from models.user import User
+
 
 recipe_bp = Blueprint('recipe', __name__, url_prefix='/api/recipes')
 rec_service = RecommendationService()
@@ -37,3 +39,5 @@ def get_recipe_alternatives():
         return jsonify(alternatives)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+

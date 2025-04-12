@@ -11,5 +11,11 @@ class Config:
     # Google Places API
     GOOGLE_PLACES_API_KEY = "AIzaSyC6iGNAyYeZ9hOzTzz7FLDwsKpV1SIE5Q0"
 
+    # Google Search API
+    GOOGLE_SEARCH_API_KEY = "AIzaSyDdQ9jC1RFBLeLx6T5GgrfqYLqQGMUv0-g"
+
+    # Search Engine ID
+    SEARCH_ENGINE_ID = "24de2f79aaa744f80"
+
     # App settings
     DEBUG = True
