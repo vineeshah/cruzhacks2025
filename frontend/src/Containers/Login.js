@@ -45,7 +45,7 @@ const Login = () => {
 
     return (
         <div className="login-page">
-            <div className="background-layer"></div> {/* New background layer */}
+            <div className="background-layer"></div>
             <Wave /> 
             <Logo />
             <div className="login-container">
