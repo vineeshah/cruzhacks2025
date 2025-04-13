@@ -180,7 +180,7 @@ const TakeoutPage = () => {
         return (
             <div className="takeout-page">
                 <Navbar />
-                <div className="loading">Loading nearby restaurants...</div>
+                <div className="loading">Loading nearby restaurants<span class="dots"></span></div>
             </div>
         );
     }

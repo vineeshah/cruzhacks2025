@@ -82,42 +82,44 @@
 }
 
 .homepage-text {
-    color: #000000;
-    font-size: 2.4rem;
-    width: 50%;
-    text-align: left; 
+    color: #ffffff; 
+    font-size: 2.6rem;
+    line-height: 1.4;
+    width: 60%;
+    text-align: left;
     margin: 0;
-    font-weight: 900 !important;
+    font-weight: 800;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); 
+    animation: fadeIn 1s ease-in;
+    padding: 20px 30px;
+    border-radius: 16px;
 }
 
 .auth-buttons {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-evenly;
     gap: 1rem;
     width: 80%;
-    border-top: #ffcccb 4px solid;
-    border-bottom: #ffcccb 4px solid;
-    border-radius: 10px;
     padding: 20px;
 }
 
 .homepage-buttons {
-    background-color: #ffcccb; 
-    height: 50px;
-    width: 150px;
-    color: white; 
-    font-size: 1.2rem; 
-    padding: 10px 20px; 
-    border: none; 
-    border-radius: 20px; 
-    cursor: pointer; 
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-    transition: all 0.3s ease; 
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.2); /* light glass effect */
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 30px;
+    padding: 12px 30px;
+    font-size: 18px;
+    font-weight: 600;
+    width: 80%;
+    transition: all 0.3s ease;
 }
 
 .homepage-buttons:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-    background-color: #ffb6b5;
+    background-color: #33333378;
+
 }

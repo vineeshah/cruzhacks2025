@@ -78,13 +78,10 @@ const Recipe = () => {
         }
     };
 
-    const handleBack = () => {
-        navigate(-1);
-    };
-
     return (
+        <div className='mistake1'>
+        <Navbar />
         <div className="recipe-card">
-            <Navbar />
             <div className="search-section1">
                 <h2>Find Healthier Alternatives</h2>
                 <form onSubmit={handleSearch} className="search-form">
@@ -136,6 +133,7 @@ const Recipe = () => {
                     !isLoading && <div className="no-results">No alternatives found. Try a different search.</div>
                 )}
             </div>
+        </div>
         </div>
     );
 };

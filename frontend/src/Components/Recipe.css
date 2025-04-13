@@ -7,7 +7,13 @@ html {
     flex-direction: column;
     align-items: center;
 }
-
+.mistake1 {
+    height:100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}  
 .recipe-card {
     background: white;
     border-radius: 12px;
@@ -88,6 +94,7 @@ html {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    color: #ddd;
 }
 
 .recipe-info {
@@ -169,7 +176,7 @@ html {
     width: 100%;
     min-height: 100px;
     padding: 12px;
-    border: 1px solid #ddd;
+    border: 1px solid white;
     border-radius: 8px;
     margin-bottom: 12px;
     resize: vertical;
@@ -255,10 +262,10 @@ html {
 }
 
 .alternative-card {
-    background: white;
+
+    background-color: #f8f9fa;
     border-radius: 8px;
     padding: 20px;
-    margin-bottom: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -304,7 +311,7 @@ html {
 
 .view-recipe-btn {
     display: inline-block;
-    background-color: #3498db;
+    background-color: orange;
     color: white;
     padding: 10px 20px;
     border-radius: 4px;
@@ -314,7 +321,7 @@ html {
 }
 
 .view-recipe-btn:hover {
-    background-color: #2980b9;
+    background-color: rgb(205, 133, 0);
 }
 
 .no-results {
@@ -378,6 +385,11 @@ html {
 
 .recipe-details {
     margin-bottom: 15px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
 }
 
 .recipe-details h3 {
@@ -389,13 +401,15 @@ html {
     color: #666;
     line-height: 1.5;
     margin-bottom: 15px;
+    height: 20%;
 }
 
 .health-benefits {
-    background-color: #f8f9fa;
+    background-color: white;
     padding: 15px;
     border-radius: 6px;
     margin-bottom: 15px;
+    height: 40%;
 }
 
 .health-benefits h4 {
