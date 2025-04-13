@@ -184,7 +184,12 @@
 }
 
 .restaurant-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     border-top: 1px solid #eee;
+    height: 70%;
+    
 }
 
 .restaurant-details h4 {
@@ -256,10 +261,10 @@
 
 .menu-link {
     display: flex;
-    justify-content: flex-end; 
-    text-align: center;
-    align-items: flex-end;
-    padding-right: 10px;
+     justify-content: flex-end; 
+     text-align: center;
+     align-items: flex-end;
+     padding-right: 10px;
 }
 
 .menu-link a {
