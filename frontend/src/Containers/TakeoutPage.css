@@ -11,7 +11,7 @@
 
 .takeout-content {
     width: 100%;
-    margin-top: 20px;
+    margin-top: 100px;
 }
 
 .takeout-content h1 {
@@ -50,9 +50,9 @@
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin-bottom: 20px;
     transition: transform 0.2s;
+    height: 350px;
+    width: 350px;
 }
 
 .restaurant-card:hover {
@@ -60,13 +60,24 @@
 }
 
 .restaurant-header {
-    margin-bottom: 15px;
+    height: 25%;
+    margin: 0 !important;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffcccb;
 }
 
 .restaurant-header h3 {
     margin: 0;
     color: #333;
     font-size: 1.2em;
+    text-align: left;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 .restaurant-rating {
@@ -74,11 +85,12 @@
     gap: 15px;
     color: #666;
     margin-top: 5px;
+    width: 100%;
 }
 
 .restaurant-address {
     color: #666;
-    margin-bottom: 15px;
+    margin: 0;
 }
 
 .restaurant-types {
@@ -165,23 +177,26 @@
 
 .restaurant-details {
     border-top: 1px solid #eee;
-    padding-top: 15px;
 }
 
 .restaurant-details h4 {
-    margin: 0.5rem 0;
     color: #666;
     font-size: 0.9rem;
+    text-align: left;
+    padding-left: 5px;
+    margin: 0;
+    margin-top: 10px;
 }
 
 .health-score {
-    margin-bottom: 15px;
+    margin-bottom: 0;
 }
 
 .health-score h4 {
     color: #2e7d32;
-    margin: 0 0 10px 0;
     font-size: 1.1em;
+    text-align: left;
+    padding-left: 5px;
 }
 
 .health-explanation {
@@ -192,19 +207,22 @@
 }
 
 .user-preferences {
-    margin-bottom: 15px;
+    margin-bottom: 0;
 }
 
 .user-preferences h4 {
-    margin: 0 0 10px 0;
+    margin: 0;
     color: #333;
     font-size: 1em;
+    margin-top: 10px;
 }
 
 .tags {
+    padding-left: 5px;
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+    margin-top: 10px;
 }
 
 .tag {
@@ -229,23 +247,27 @@
 }
 
 .menu-link {
-    margin-top: 15px;
+    display: flex;
+    justify-content: flex-end; 
     text-align: center;
+    align-items: flex-end;
+    padding-right: 10px;
 }
 
 .menu-link a {
     display: inline-block;
     padding: 8px 16px;
-    background-color: #4CAF50;
+    background-color: orange;
     color: white;
     text-decoration: none;
     border-radius: 4px;
     font-weight: 500;
     transition: background-color 0.3s;
+    margin-left: auto; 
 }
 
 .menu-link a:hover {
-    background-color: #45a049;
+    background-color: rgb(205, 133, 0);
 }
 
 .health-keyword {
