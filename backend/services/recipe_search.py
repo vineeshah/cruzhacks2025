@@ -58,7 +58,7 @@ class RecipeSearchService:
             lines = [line.strip() for line in response.text.split('\n') if line.strip()]
     
             # Extract alternatives (removing the number and dot at the start of each line)
-            alternatives = [line[2:].strip() for line in lines if line[0].isdigit()]
+            alternatives = [line[2:].strip().replace('"', '') for line in lines if line[0].isdigit()]
             '''return {
                 "original_dish": food_item,
                 "healthier_alternatives": alternatives
