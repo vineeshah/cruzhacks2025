@@ -1,26 +1,24 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Logo from '../Components/logo';
-import Wave from '../Components/Wave'; 
 import './Login.css';
+import Logo from '../Components/logo';
+import Wave from '../Components/Wave';
 
 const Login = () => {
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        email: '',
-        password: ''
-    });
+    const [formData, setFormData] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
 
     const handleChange = (e) => {
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value
+            [e.target.name]: e.target.value,
         });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         try {
             const response = await fetch('http://localhost:5000/api/auth/login', {
                 method: 'POST',
@@ -31,10 +29,10 @@ const Login = () => {
             });
 
             const data = await response.json();
-            
+
             if (response.ok) {
                 localStorage.setItem('token', data.access_token);
-                navigate('/welcome');
+                navigate('/welcome', { state: { from: 'login' } }); // Navigate to the welcome page with state
             } else {
                 setError(data.error || 'Login failed');
             }
@@ -46,7 +44,7 @@ const Login = () => {
     return (
         <div className="login-page">
             <div className="background-layer"></div>
-            <Wave /> 
+            <Wave />
             <Logo />
             <div className="login-container">
                 <h1>Login to IdealMeal</h1>

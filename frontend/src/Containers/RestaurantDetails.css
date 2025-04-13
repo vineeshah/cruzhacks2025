@@ -10,7 +10,9 @@
  }
 
  .restaurant-profile {
-    margin-top: 100px;
+    margin-top: 200px;
+    animation: fadeIn 1s ease-in-out; /* Apply the fade-in animation */
+    opacity: 1; /* Ensure the container is visible after the animation */
 }
 
 .restaurant-header-profile {
@@ -132,9 +134,8 @@
     font-weight: 500;
     transition: background-color 0.3s;
     width: 100%;
-    height: 100%;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .menu-button:hover {

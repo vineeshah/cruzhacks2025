@@ -9,8 +9,14 @@
     right: 0;
     height: 80px;
     z-index: 1000;
-    overflow: visible; 
     background-color: #ffcccb;
+    transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth transition */
+}
+
+
+
+.navbar.animating {
+    pointer-events: none; /* Disable interactions during animation */
 }
 
 .waveNavbar {
@@ -64,7 +70,7 @@
 }
 
 .nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.3); /* Slightly brighter background */
+    background-color: #f0f0f0; /* Slightly brighter background */
     color: #ffcccb; 
 }
 

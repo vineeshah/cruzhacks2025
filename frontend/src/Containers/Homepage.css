@@ -20,6 +20,7 @@
     animation: backgroundAnimation 20s infinite ease-in-out; 
     position: relative;
     overflow: hidden;
+    
 }
 
 @keyframes backgroundAnimation {
@@ -97,7 +98,7 @@
     width: 80%;
     border-top: #ffcccb 4px solid;
     border-bottom: #ffcccb 4px solid;
-    border-radius: 20px;
+    border-radius: 10px;
     padding: 20px;
 }
 
