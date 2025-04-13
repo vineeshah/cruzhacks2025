@@ -27,13 +27,13 @@ def create_app():
     from routes.auth import auth_bp
     from routes.food import food_bp
     from routes.recipes import recipe_bp
-    from routes.restaurants import restaurant_bp
+    from routes.restaurants import restaurants_bp
     from routes.user import user_bp
 
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(food_bp, url_prefix='/api/food')
     app.register_blueprint(recipe_bp, url_prefix='/api/recipes')
-    app.register_blueprint(restaurant_bp, url_prefix='/api/restaurants')
+    app.register_blueprint(restaurants_bp, url_prefix='/api/restaurants')
     app.register_blueprint(user_bp, url_prefix='/api/user')
 
     return app
