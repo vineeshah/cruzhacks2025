@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../Components/logo';
+import Wave from '../Components/Wave'; 
 import './Login.css';
 
 const Login = () => {
@@ -32,9 +33,7 @@ const Login = () => {
             const data = await response.json();
             
             if (response.ok) {
-                // Store the token in localStorage
                 localStorage.setItem('token', data.access_token);
-                // Navigate to welcome page
                 navigate('/welcome');
             } else {
                 setError(data.error || 'Login failed');
@@ -46,9 +45,10 @@ const Login = () => {
 
     return (
         <div className="login-page">
+            <Wave /> 
             <Logo />
             <div className="login-container">
-                <h1>Login to Healthify</h1>
+                <h1>Login to IdealMeal</h1>
                 {error && <div className="error-message">{error}</div>}
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
@@ -83,4 +83,4 @@ const Login = () => {
     );
 };
 
-export default Login; 
+export default Login;
