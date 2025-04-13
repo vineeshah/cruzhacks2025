@@ -2,6 +2,9 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from services.recipe_search import RecipeSearchService
 from models.user import User
+from run import mongo
+from bson import ObjectId
+from datetime import datetime
 
 
 recipe_bp = Blueprint('recipe', __name__, url_prefix='/api/recipes')
@@ -73,3 +76,102 @@ def get_recipe_alternatives():
         return jsonify({"error": str(e)}), 500
 
 '''
+
+class Recipe:
+    @staticmethod
+    def find_by_id(recipe_id):
+        """Find a recipe by ID"""
+        try:
+            recipe = mongo.db.recipes.find_one({"_id": ObjectId(recipe_id)})
+            if recipe:
+                recipe['id'] = str(recipe.pop('_id'))
+            return recipe
+        except:
+            return None
+
+    @staticmethod
+    def create(recipe_data):
+        """Create a new recipe"""
+        try:
+            recipe_data.update({
+                "created_at": datetime.utcnow(),
+                "updated_at": datetime.utcnow()
+            })
+            result = mongo.db.recipes.insert_one(recipe_data)
+            return str(result.inserted_id)
+        except:
+            return None
+
+    @staticmethod
+    def update(recipe_id, recipe_data):
+        """Update an existing recipe"""
+        try:
+            recipe_data["updated_at"] = datetime.utcnow()
+            mongo.db.recipes.update_one(
+                {"_id": ObjectId(recipe_id)},
+                {"$set": recipe_data}
+            )
+            return True
+        except:
+            return False
+
+    @staticmethod
+    def delete(recipe_id):
+        """Delete a recipe"""
+        try:
+            mongo.db.recipes.delete_one({"_id": ObjectId(recipe_id)})
+            return True
+        except:
+            return False
+
+    @staticmethod
+    def search_by_preferences(preferences):
+        """Search recipes by user preferences"""
+        try:
+            query = {
+                "$or": [
+                    {"health_goals": {"$in": preferences}},
+                    {"dietary_restrictions": {"$in": preferences}}
+                ]
+            }
+            recipes = list(mongo.db.recipes.find(query))
+            for recipe in recipes:
+                recipe['id'] = str(recipe.pop('_id'))
+            return recipes
+        except:
+            return []
+
+    @staticmethod
+    def add_rating(recipe_id, user_id, rating, comment=None):
+        """Add a user rating to a recipe"""
+        try:
+            rating_data = {
+                "user_id": user_id,
+                "rating": rating,
+                "comment": comment,
+                "created_at": datetime.utcnow()
+            }
+            
+            mongo.db.recipes.update_one(
+                {"_id": ObjectId(recipe_id)},
+                {
+                    "$push": {"ratings": rating_data},
+                    "$set": {"updated_at": datetime.utcnow()}
+                }
+            )
+            return True
+        except:
+            return False
+
+    @staticmethod
+    def get_average_rating(recipe_id):
+        """Calculate average rating for a recipe"""
+        try:
+            recipe = mongo.db.recipes.find_one({"_id": ObjectId(recipe_id)})
+            if not recipe or not recipe.get('ratings'):
+                return 0
+                
+            ratings = [r['rating'] for r in recipe['ratings']]
+            return sum(ratings) / len(ratings)
+        except:
+            return 0
