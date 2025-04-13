@@ -34,46 +34,20 @@ class RecipeSearchService:
             
             # Create prompt for Gemini
             prompt = f"""
-            User preferences:
+            Given these user preferences:
             - Health goals: {user_preferences['health_goals']}
             - Dietary restrictions: {user_preferences['dietary_restrictions']}
-            
-            Food Item: {food_item}
-            
-            Suggest 3-5 healthier alternatives to this food item that align with the user's preferences.
-            For each alternative, provide:
-            1. Food item name
-            2. Recipe name
-            3. Brief description
-            4. Key health benefits
-            5. Link to a recipe website
-            
-            Important requirements:
-            - Only use recipes from these specific websites:
-              * Allrecipes.com
-              * FoodNetwork.com
-              * EatingWell.com
-              * MinimalistBaker.com
-              * CookieAndKate.com
-              * LoveAndLemons.com
-              * OhSheGlows.com
-              * BudgetBytes.com
-              * Skinnytaste.com
-              * PinchOfYum.com
-            
-            - The link must be a direct URL to a specific recipe on one of these websites
-            - The recipe must actually exist on the website
-            - Do not make up or generate fake URLs
-            - All links must start with https://
-            
-            Format the response as a JSON array with these fields for each alternative:
-            - food_item
-            - recipe_name
-            - description
-            - benefits
-            - link
-            
-            Return ONLY the JSON array, nothing else.
+
+            For the food item: {food_item}
+
+            Respond with EXACTLY 3 healthier alternative dishes.
+            Format your response as a simple numbered list with ONLY the names:
+            1. [First Alternative]
+            2. [Second Alternative]
+            3. [Third Alternative]
+
+            Do not include any explanations, descriptions, or additional information.
+            Just the numbered names of the dishes.
             """
             
             # Get alternatives from Gemini
@@ -81,65 +55,21 @@ class RecipeSearchService:
             print("\n=== Gemini Response ===")
             print(response.text)
             
-            # Clean the response text
-            response_text = response.text.strip()
-            if response_text.startswith('```json'):
-                response_text = response_text[7:]
-            if response_text.endswith('```'):
-                response_text = response_text[:-3]
-            response_text = response_text.strip()
-            
-            # Parse the response
-            try:
-                alternatives = json.loads(response_text)
-                print("\n=== Parsed Alternatives ===")
-                print(json.dumps(alternatives, indent=2))
-                
-                # Validate and clean links
-                valid_domains = [
-                    'allrecipes.com',
-                    'foodnetwork.com',
-                    'eatingwell.com',
-                    'minimalistbaker.com',
-                    'cookieandkate.com',
-                    'loveandlemons.com',
-                    'ohsheglows.com',
-                    'budgetbytes.com',
-                    'skinnytaste.com',
-                    'pinchofyum.com'
-                ]
-                
-                for alt in alternatives:
-                    if 'link' in alt:
-                        # Ensure link starts with https://
-                        if not alt['link'].startswith('https://'):
-                            alt['link'] = 'https://' + alt['link']
-                        
-                        # Remove any trailing characters that might break the URL
-                        alt['link'] = alt['link'].split(' ')[0].split('\n')[0].strip()
-                        
-                        # Validate domain
-                        from urllib.parse import urlparse
-                        domain = urlparse(alt['link']).netloc.lower()
-                        if not any(valid_domain in domain for valid_domain in valid_domains):
-                            print(f"\n=== Invalid Domain Warning ===")
-                            print(f"Invalid domain in link: {alt['link']}")
-                            alt['link'] = '#'  # Set to invalid link if domain is not in our list
-                
-                return {
-                    "alternatives": alternatives,
-                    "user_preferences": user_preferences
-                }
-            except json.JSONDecodeError as e:
-                print(f"\n=== JSON Parse Error ===")
-                print(f"Error: {str(e)}")
-                print(f"Response text: {response_text}")
-                return {"error": "Failed to parse recipe alternatives"}
-                
+            lines = [line.strip() for line in response.text.split('\n') if line.strip()]
+    
+            # Extract alternatives (removing the number and dot at the start of each line)
+            alternatives = [line[2:].strip() for line in lines if line[0].isdigit()]
+            '''return {
+                "original_dish": food_item,
+                "healthier_alternatives": alternatives
+            }
+            '''
+            recommendations = self.search_recipes(alternatives)
+            return recommendations
+
         except Exception as e:
-            print(f"\n=== Error in get_recipe_recommendations ===")
-            print(f"Error: {str(e)}")
-            return {"error": str(e)}
+            print(f"Error parsing alternatives: {str(e)}")
+            return None
 
     def google_search(self, query, **params):
         '''Performs single search query'''
@@ -186,7 +116,7 @@ class RecipeSearchService:
                 # Limit to just one page of results for testing
                 response = self.google_search(
                     query, 
-                    num=10)  # Limit to 10 results for testing
+                    num=7)  # Limit to 10 results for testing
 
                 if 'items' in response:
                     search_results.extend(response.get('items', []))
