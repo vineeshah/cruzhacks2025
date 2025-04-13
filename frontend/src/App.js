@@ -8,6 +8,7 @@ import UserSelect from './Containers/UserSelectPage';
 import Takeout from './Containers/TakeoutPage';
 import Navbar from './Components/Navbar';
 import RestaurantDetails from './Containers/RestaurantDetails';
+import Recipe from './Components/Recipe';
 // import PrivateRoute from './Components/PrivateRoute';
 import './App.css';
 
@@ -23,6 +24,7 @@ function App() {
                     <Route path="/user-select" element={<UserSelect />} />
                     <Route path="/takeout" element={<Takeout />} />
                     <Route path="/restaurants/:placeId" element={<RestaurantDetails />} />
+                    <Route path="/recipes" element={<Recipe />} />
                 </Routes>
             </div>
         </div>
