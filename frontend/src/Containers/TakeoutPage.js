@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './TakeoutPage.css';
-import Logo from '../Components/logo';
+import Navbar from '../Components/Navbar';
 
 const RestaurantCard = ({ restaurant }) => {
     console.log('RestaurantCard received:', restaurant);
@@ -14,11 +14,13 @@ const RestaurantCard = ({ restaurant }) => {
                 <div className="restaurant-header">
                     <h3>{restaurant.name}</h3>
                     <div className="restaurant-rating">
-                        <span>⭐ {restaurant.rating}</span>
-                        <span>{'$'.repeat(restaurant.price_level || 1)}</span>
+                    <p className="restaurant-address">{restaurant.address}</p>
+                        <div>
+                            <span className='ratingSpan'>⭐ {restaurant.rating}</span>
+                            <span>{'$'.repeat(restaurant.price_level || 1)}</span>
+                        </div>
                     </div>
                 </div>
-                <p className="restaurant-address">{restaurant.address}</p>
                 
                 <div className="restaurant-details">
                     <div className="health-score">
@@ -176,7 +178,7 @@ const TakeoutPage = () => {
     if (loading && !locationError) {
         return (
             <div className="takeout-page">
-                <Logo />
+                <Navbar />
                 <div className="loading">Loading nearby restaurants...</div>
             </div>
         );
@@ -185,7 +187,7 @@ const TakeoutPage = () => {
     if (locationError) {
         return (
             <div className="takeout-page">
-                <Logo />
+                <Navbar />
                 <div className="error">
                     {locationError}
                     <div className="location-help">
@@ -209,7 +211,7 @@ const TakeoutPage = () => {
     if (error) {
         return (
             <div className="takeout-page">
-                <Logo />
+                <Navbar />
                 <div className="error">{error}</div>
             </div>
         );
@@ -217,7 +219,7 @@ const TakeoutPage = () => {
 
     return (
         <div className="takeout-page">
-            <Logo />
+            <Navbar />
             <div className="takeout-content">
                 <h1>Nearby Restaurants</h1>
                 <p className="subtitle">Find healthy options near you</p>
