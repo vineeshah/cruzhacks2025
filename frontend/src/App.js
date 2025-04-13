@@ -6,7 +6,6 @@ import Register from './Containers/Register';
 import WelcomePage from './Containers/WelcomePage';
 import UserSelect from './Containers/UserSelectPage';
 import Takeout from './Containers/TakeoutPage';
-import Navbar from './Components/Navbar';
 import RestaurantDetails from './Containers/RestaurantDetails';
 import Recipe from './Components/Recipe';
 // import PrivateRoute from './Components/PrivateRoute';

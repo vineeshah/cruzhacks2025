@@ -1,18 +1,36 @@
-.restaurant-details-page {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
+.content {
+    width: 100%;
+    height: 100vh;
 }
 
-.restaurant-header {
+.restaurant-details-page {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+ }
+
+ .restaurant-profile {
+    margin-top: 100px;
+}
+
+.restaurant-header-profile {
     text-align: center;
     margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffcccb;
+    margin:0;
+    padding: 30px;
+    border-radius: 8px 8px 0 0;
 }
 
 .restaurant-header h1 {
     font-size: 2em;
     color: #333;
     margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
 }
 
 .restaurant-meta {
@@ -28,18 +46,24 @@
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 20px;
+    display: flex;
+    flex-direction: row;
 }
 
 .restaurant-info h3 {
     color: #333;
     margin-bottom: 10px;
     font-size: 1.2em;
+    text-align: left;
+    width: 40%;
 }
 
 .hours {
     margin-bottom: 20px;
     padding-bottom: 20px;
-    border-bottom: 1px solid #eee;
+    border-right: 3px solid #eee;
+    text-align: left;
+    width: 40%;
 }
 
 .hours-list {
@@ -52,9 +76,21 @@
 }
 
 .preferences {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
     margin-bottom: 20px;
     padding-bottom: 20px;
     border-bottom: 1px solid #eee;
+}
+
+.preferences h3 {
+    width: 100%;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    text-align: center
 }
 
 .tags {
@@ -81,22 +117,26 @@
 
 .menu-section {
     text-align: center;
+    width: 60%;
+    margin:20px;
 }
 
-.menu-button {
+.menu-button-profile {
     display: inline-block;
-    padding: 12px 24px;
-    background-color: #4CAF50;
+    background-color: orange;
     color: white;
     text-decoration: none;
     border-radius: 4px;
     font-weight: 500;
     transition: background-color 0.3s;
-    margin-top: 10px;
+    width: 100%;
+    height: 100%;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 .menu-button:hover {
-    background-color: #45a049;
+    background-color: rgb(205, 133, 0);
 }
 
 .loading {
@@ -113,3 +153,11 @@
     border-radius: 4px;
     margin: 20px 0;
 } 
+
+.restaurant-profile-right {
+    display: flex;
+    width: 60%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

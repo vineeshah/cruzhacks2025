@@ -125,7 +125,7 @@
 }
 
 .continue-button.active:hover {
-    background-color: orange;
+    background-color: rgb(205, 133, 0);
 }
 
 /* Add hover effect only when button is active */
