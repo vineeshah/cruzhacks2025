@@ -7,9 +7,9 @@
     width: 80%;
     margin: 0 auto;
     padding: 20px;
-}
+ }
 
-.restaurant-profile {
+ .restaurant-profile {
     margin-top: 100px;
 }
 
@@ -29,6 +29,8 @@
     font-size: 2em;
     color: #333;
     margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
 }
 
 .restaurant-meta {
@@ -52,6 +54,8 @@
     color: #333;
     margin-bottom: 10px;
     font-size: 1.2em;
+    text-align: left;
+    width: 40%;
 }
 
 .hours {
@@ -75,10 +79,18 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
+    align-items: center;
     height: 100%;
     margin-bottom: 20px;
     padding-bottom: 20px;
     border-bottom: 1px solid #eee;
+}
+
+.preferences h3 {
+    width: 100%;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    text-align: center
 }
 
 .tags {
