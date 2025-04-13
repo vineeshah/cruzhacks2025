@@ -1,9 +1,9 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from services.recs import RecommendationService
+from services.recipe_search import RecipeSearchService
 
 food_bp = Blueprint('food', __name__, url_prefix='/api/food')
-rec_service = RecommendationService()
+rec_service = RecipeSearchService()
 
 @food_bp.route('/analyze', methods=['POST'])
 @jwt_required()
@@ -41,13 +41,13 @@ def get_food_alternatives():
 def get_recipe_alternatives():
     try:
         data = request.get_json()
-        recipe_name = data.get('recipe_name')
+        food_item = data.get('food_item')
         user_id = get_jwt_identity()
         
-        if not recipe_name:
-            return jsonify({"error": "Recipe name is required"}), 400
+        if not food_item:
+            return jsonify({"error": "Food item is required"}), 400
         
-        alternatives = rec_service.get_recipe_recommendations(recipe_name, user_id)
+        alternatives = rec_service.get_recipe_recommendations(food_item, user_id)
         return jsonify(alternatives)
     except Exception as e:
         return jsonify({"error": str(e)}), 500

@@ -27,7 +27,7 @@ const UserSelectPage = () => {
             icon: "🥡"
         },
         {
-            id: 'cooking',
+            id: 'recipes',
             title: "Home Cooking",
             description: "Discover nutritious recipes you can make at home",
             icon: "👩‍🍳"

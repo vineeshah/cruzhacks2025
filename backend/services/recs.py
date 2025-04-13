@@ -109,3 +109,52 @@ class RecommendationService:
                 "rating": 5,
                 "explanation": "Unable to analyze food health"
             }
+    
+    def get_recipe_recommendations(self, recipe_name, user_id):
+        """Get healthier recipe alternatives using Gemini"""
+        try:
+            # Get user preferences
+            user = User.find_by_id(user_id)
+            if not user:
+                return {"error": "User not found"}
+            
+            user_preferences = {
+                "health_goals": user.get('health_goals', []),
+                "dietary_restrictions": user.get('dietary_restrictions', [])
+            }
+            
+            # Create prompt for Gemini
+            prompt = f"""
+            User preferences:
+            - Health goals: {user_preferences['health_goals']}
+            - Dietary restrictions: {user_preferences['dietary_restrictions']}
+            
+            Original recipe: {recipe_name}
+            
+            Suggest 3-5 healthier alternatives to this recipe that align with the user's preferences.
+            For each alternative, provide:
+            1. Recipe name
+            2. Brief description
+            3. Key health benefits
+            4. Link to a recipe website
+            
+            Format the response as a JSON array with these fields for each alternative:
+            - name
+            - description
+            - benefits
+            - link
+            """
+            
+            # Get alternatives from Gemini
+            response = self.model.generate_content(prompt)
+            
+            # Parse the response
+            try:
+                alternatives = json.loads(response.text)
+                return alternatives
+            except json.JSONDecodeError:
+                return {"error": "Failed to generate recipe alternatives"}
+                
+        except Exception as e:
+            print(f"Error getting recipe alternatives: {str(e)}")
+            return {"error": str(e)}
