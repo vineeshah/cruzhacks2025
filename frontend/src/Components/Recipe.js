@@ -83,7 +83,6 @@ const Recipe = () => {
 
     return (
         <div className="recipe-card">
-            <button onClick={handleBack} className="back-button">← Back</button>
             
             <div className="search-section">
                 <h2>Find Healthier Alternatives</h2>

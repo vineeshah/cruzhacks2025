@@ -22,18 +22,18 @@ const RestaurantCard = ({ restaurant }) => {
                     </div>
                 </div>
                 
-                <div className="restaurant-details">
-                    <div className="health-score">
-                        <h4>Health Score: {restaurant.health_score}/100</h4>
+                <div className="restaurant-details-card">
+                    <div className="health-score-card">
+                        <h4 className='fixedText'>Health Score: {restaurant.health_score}/100</h4>
                         <div className="tags">
                             {restaurant.health_keywords?.map((keyword, index) => (
-                                <span key={index} className="tag health-keyword">{keyword}</span>
+                                <span key={index} className="tag">{keyword}</span>
                             ))}
                         </div>
                     </div>
                     
                     <div className="user-preferences">
-                        <h4>Your Preferences:</h4>
+                        <h4 className='fixedText'>Your Preferences:</h4>
                         <div className="tags">
                             {restaurant.user_preferences?.health_goals?.map((goal, index) => (
                                 <span key={index} className="tag health-goal">{goal}</span>

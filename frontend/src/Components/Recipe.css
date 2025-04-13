@@ -95,7 +95,7 @@
     gap: 8px;
 }
 
-.tag {
+.tag-recipe {
     padding: 6px 12px;
     border-radius: 20px;
     font-size: 14px;
@@ -203,7 +203,7 @@
 }
 
 .search-button {
-    background: #4CAF50;
+    background: orange;
     color: white;
     border: none;
     padding: 12px 24px;
@@ -214,7 +214,7 @@
 }
 
 .search-button:hover:not(:disabled) {
-    background: #45a049;
+    background: rgb(205, 133, 0);
 }
 
 .search-button:disabled {

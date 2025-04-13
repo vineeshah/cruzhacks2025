@@ -183,16 +183,8 @@
     }
 }
 
-.restaurant-details {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    border-top: 1px solid #eee;
-    height: 70%;
-    
-}
 
-.restaurant-details h4 {
+.restaurant-details-card h4 {
     color: #666;
     font-size: 0.9rem;
     text-align: left;
@@ -201,7 +193,7 @@
     margin-top: 10px;
 }
 
-.health-score {
+.health-score-card {
     margin-bottom: 0;
 }
 
@@ -225,17 +217,19 @@
 
 .user-preferences h4 {
     margin: 0;
-    color: #333;
+    color: #666;
     font-size: 1em;
     margin-top: 10px;
 }
 
-.tags {
-    padding-left: 5px;
+.restaurant-details-card {
+    height: 75%; /* Make it take up the remaining space */
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 10px;
+    flex-direction: column;
+    justify-content: space-between;
+    border-top: 1px solid #eee;
+    box-sizing: border-box;
+    padding: 10px; /* Optional: Add padding for better spacing */
 }
 
 .tag {
@@ -290,4 +284,13 @@
 
 .ratingSpan {
     padding-right: 10px;
+}
+
+.fixedText {
+    margin: 0 !important;
+    color: #666 !important;
+    font-size: 1em !important;
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+    margin-top: 0 !important;
 }
