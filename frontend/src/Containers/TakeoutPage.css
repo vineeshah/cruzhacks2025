@@ -48,7 +48,7 @@
 
 .restaurant-card {
     background: white;
-    border-radius: 8px;
+    border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
     height: 350px;
@@ -69,6 +69,8 @@
     justify-content: center;
     align-items: center;
     background-color: #ffcccb;
+    border-top-right-radius: 12px;
+    border-top-left-radius: 12px;
 }
 
 .restaurant-header h3 {
@@ -86,11 +88,17 @@
     color: #666;
     margin-top: 5px;
     width: 100%;
+    justify-content: space-between;
 }
 
 .restaurant-address {
     color: #666;
     margin: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width:70%;
+    text-align: left;
 }
 
 .restaurant-types {
@@ -273,4 +281,8 @@
 .health-keyword {
     background-color: #e3f2fd;
     color: #1565c0;
+}
+
+.ratingSpan {
+    padding-right: 10px;
 }

@@ -15,8 +15,10 @@ const RestaurantCard = ({ restaurant }) => {
                     <h3>{restaurant.name}</h3>
                     <div className="restaurant-rating">
                     <p className="restaurant-address">{restaurant.address}</p>
-                        <span>⭐ {restaurant.rating}</span>
-                        <span>{'$'.repeat(restaurant.price_level || 1)}</span>
+                        <div>
+                            <span className='ratingSpan'>⭐ {restaurant.rating}</span>
+                            <span>{'$'.repeat(restaurant.price_level || 1)}</span>
+                        </div>
                     </div>
                 </div>
                 
