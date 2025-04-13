@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../Components/logo';
 import './Register.css';
+import Wave from '../Components/Wave'; 
 
 const Register = () => {
     const navigate = useNavigate();
@@ -44,9 +45,7 @@ const Register = () => {
             const data = await response.json();
             
             if (response.ok) {
-                // Store the token in localStorage
                 localStorage.setItem('token', data.access_token);
-                // Navigate to welcome page
                 navigate('/welcome');
             } else {
                 setError(data.error || 'Registration failed');
@@ -58,6 +57,7 @@ const Register = () => {
 
     return (
         <div className="register-page">
+            <Wave /> 
             <Logo />
             <div className="register-container">
                 <h1>Create an Account</h1>
