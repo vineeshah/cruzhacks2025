@@ -5,11 +5,10 @@ from pathlib import Path
 import time
 import json
 import sys
-import google.generativeai as genai
-from config import Config
-from models.user import User
-
 sys.path.append(str(Path(__file__).parent.parent))
+import google.generativeai as genai
+from models.user import User
+from config import Config
 
 class RecipeSearchService:
     def __init__(self):
@@ -34,46 +33,20 @@ class RecipeSearchService:
             
             # Create prompt for Gemini
             prompt = f"""
-            User preferences:
+            Given these user preferences:
             - Health goals: {user_preferences['health_goals']}
             - Dietary restrictions: {user_preferences['dietary_restrictions']}
-            
-            Food Item: {food_item}
-            
-            Suggest 3-5 healthier alternatives to this food item that align with the user's preferences.
-            For each alternative, provide:
-            1. Food item name
-            2. Recipe name
-            3. Brief description
-            4. Key health benefits
-            5. Link to a recipe website
-            
-            Important requirements:
-            - Only use recipes from these specific websites:
-              * Allrecipes.com
-              * FoodNetwork.com
-              * EatingWell.com
-              * MinimalistBaker.com
-              * CookieAndKate.com
-              * LoveAndLemons.com
-              * OhSheGlows.com
-              * BudgetBytes.com
-              * Skinnytaste.com
-              * PinchOfYum.com
-            
-            - The link must be a direct URL to a specific recipe on one of these websites
-            - The recipe must actually exist on the website
-            - Do not make up or generate fake URLs
-            - All links must start with https://
-            
-            Format the response as a JSON array with these fields for each alternative:
-            - food_item
-            - recipe_name
-            - description
-            - benefits
-            - link
-            
-            Return ONLY the JSON array, nothing else.
+
+            For the food item: {food_item}
+
+            Respond with EXACTLY 3 healthier alternative dishes.
+            Format your response as a simple numbered list with ONLY the names:
+            1. [First Alternative]
+            2. [Second Alternative]
+            3. [Third Alternative]
+
+            Do not include any explanations, descriptions, or additional information.
+            Just the numbered names of the dishes.
             """
             
             # Get alternatives from Gemini
@@ -81,64 +54,33 @@ class RecipeSearchService:
             print("\n=== Gemini Response ===")
             print(response.text)
             
-            # Clean the response text
-            response_text = response.text.strip()
-            if response_text.startswith('```json'):
-                response_text = response_text[7:]
-            if response_text.endswith('```'):
-                response_text = response_text[:-3]
-            response_text = response_text.strip()
+            lines = [line.strip().replace('"', '') for line in response.text.split('\n') if line.strip()]
+    
+            # Extract alternatives (removing the number and dot at the start of each line)
+            alternatives = [line[2:].strip() for line in lines if line[0].isdigit()]
             
-            # Parse the response
-            try:
-                alternatives = json.loads(response_text)
-                print("\n=== Parsed Alternatives ===")
-                print(json.dumps(alternatives, indent=2))
-                
-                # Validate and clean links
-                valid_domains = [
-                    'allrecipes.com',
-                    'foodnetwork.com',
-                    'eatingwell.com',
-                    'minimalistbaker.com',
-                    'cookieandkate.com',
-                    'loveandlemons.com',
-                    'ohsheglows.com',
-                    'budgetbytes.com',
-                    'skinnytaste.com',
-                    'pinchofyum.com'
-                ]
-                
-                for alt in alternatives:
-                    if 'link' in alt:
-                        # Ensure link starts with https://
-                        if not alt['link'].startswith('https://'):
-                            alt['link'] = 'https://' + alt['link']
-                        
-                        # Remove any trailing characters that might break the URL
-                        alt['link'] = alt['link'].split(' ')[0].split('\n')[0].strip()
-                        
-                        # Validate domain
-                        from urllib.parse import urlparse
-                        domain = urlparse(alt['link']).netloc.lower()
-                        if not any(valid_domain in domain for valid_domain in valid_domains):
-                            print(f"\n=== Invalid Domain Warning ===")
-                            print(f"Invalid domain in link: {alt['link']}")
-                            alt['link'] = '#'  # Set to invalid link if domain is not in our list
-                
-                return {
-                    "alternatives": alternatives,
-                    "user_preferences": user_preferences
-                }
-            except json.JSONDecodeError as e:
-                print(f"\n=== JSON Parse Error ===")
-                print(f"Error: {str(e)}")
-                print(f"Response text: {response_text}")
-                return {"error": "Failed to parse recipe alternatives"}
-                
+            # Get recipe details for each alternative
+            recipe_details = []
+            for alt in alternatives:
+                recipe_info = self.search_recipes(alt)
+                if recipe_info and alt in recipe_info:
+                    recipe_data = recipe_info[alt]
+                    print('helloooooooooooo', recipe_data[1])
+                    recipe_details.append({
+                        "recipe_name": alt,
+                        "description": recipe_data[0] if len(recipe_data) > 0 else "No description available",
+                        "benefits": recipe_data[1] if len(recipe_data) > 1 else "No health benefits information available",
+                        "link": recipe_data[2] if len(recipe_data) > 2 else "#",
+                        "food_item": food_item,
+                        "user_preferences": user_preferences
+                    })
+            
+            return {
+                "alternatives": recipe_details
+            }
+
         except Exception as e:
-            print(f"\n=== Error in get_recipe_recommendations ===")
-            print(f"Error: {str(e)}")
+            print(f"Error parsing alternatives: {str(e)}")
             return {"error": str(e)}
 
     def google_search(self, query, **params):
@@ -170,43 +112,73 @@ class RecipeSearchService:
                 #return create_mock_response(query)
 
 
-    def search_recipes(self, preferences):
-        '''Returns all recipes based on user's preferences'''
+    def search_recipes(self, food):
+        '''Returns recipe queries of inputted food'''
         recipe_queries = {}
-        for pref in preferences:
-            sub_queries = []
-            # Main execution
-            try:
-                print("Starting Google Search API test...")
-                # Test with a simple query first
-                query = pref + ' recipe'
-                print(f"Searching for: {query}")
+        query_keys = []
+        # Main execution
+        try:
+            print("Starting Google Search API test...")
+            # Test with a simple query first
+            query = food + ' recipe'
+            print(f"Searching for: {query}")
 
-                search_results = []
-                # Limit to just one page of results for testing
-                response = self.google_search(
-                    query, 
-                    num=10)  # Limit to 10 results for testing
+            search_results = []
+            # Limit to just one page of results for testing
+            response = self.google_search(
+                query, 
+                num=10)
 
-                if 'items' in response:
-                    search_results.extend(response.get('items', []))
-                    print(f"Found {len(search_results)} results")
+            if 'items' in response:
+                search_results.extend(response.get('items', []))
+                print(f"Found {len(search_results)} results")
 
-                    if search_results:
-                        for entry in search_results:
-                            if 'reddit' not in entry['link']:
-                                entry_info = {}
-                                entry_info['title'] = entry['title']
-                                entry_info['link'] = entry['link']
-                                sub_queries.append(entry_info)
-                    else:
-                        print("No results found")
-
+                if search_results:
+                    for entry in search_results:
+                        if 'reddit' not in entry['link']:
+                            print(entry)
+                            # Extract title and link as strings
+                            title = entry.get('title', 'No title available')
+                            link = entry.get('link', '#')
+                            
+                            # Create a description from the title
+                            description = f"A delicious {food.lower()} recipe"
+                            
+                            # Create a simple benefits string
+                            benefits = f"Healthy and nutritious {title.lower()}"
+                            
+                            query_keys.append([description, benefits, link])
                 else:
-                   print("No 'items' found in the response")
-                   print(f"Response: {json.dumps(response, indent=2)}")
-            except Exception as e:
-                   print(f"Error in main execution: {str(e)}")
+                    print("No results found")
+                    # Add default values if no results found
+                    query_keys.append([
+                        f"No description available for {food}",
+                        f"No health benefits information available for {food}",
+                        "#"
+                    ])
 
-            recipe_queries[pref] = sub_queries
+            else:
+                print("No 'items' found in the response")
+                print(f"Response: {json.dumps(response, indent=2)}")
+                # Add default values if no items found
+                query_keys.append([
+                    f"No description available for {food}",
+                    f"No health benefits information available for {food}",
+                    "#"
+                ])
+        except Exception as e:
+                print(f"Error in main execution: {str(e)}")
+                # Add default values if an error occurs
+                query_keys.append([
+                    f"No description available for {food}",
+                    f"No health benefits information available for {food}",
+                    "#"
+                ])
+
+        recipe_queries[food] = query_keys[0]
+        print('AHHHHHHHH', recipe_queries)
         return recipe_queries
+
+r = RecipeSearchService()
+search = r.search_recipes('pizza')
+print(search)
