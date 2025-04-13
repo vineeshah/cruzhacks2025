@@ -59,17 +59,29 @@ class RecipeSearchService:
     
             # Extract alternatives (removing the number and dot at the start of each line)
             alternatives = [line[2:].strip() for line in lines if line[0].isdigit()]
-            '''return {
-                "original_dish": food_item,
-                "healthier_alternatives": alternatives
+            
+            # Get recipe details for each alternative
+            recipe_details = []
+            for alt in alternatives:
+                recipe_info = self.search_recipes([alt])
+                if recipe_info and alt in recipe_info:
+                    recipe_data = recipe_info[alt]
+                    recipe_details.append({
+                        "recipe_name": alt,
+                        "description": recipe_data[0] if len(recipe_data) > 0 else "No description available",
+                        "benefits": recipe_data[1] if len(recipe_data) > 1 else "No health benefits information available",
+                        "link": recipe_data[2] if len(recipe_data) > 2 else "#",
+                        "food_item": food_item,
+                        "user_preferences": user_preferences
+                    })
+            
+            return {
+                "alternatives": recipe_details
             }
-            '''
-            recommendations = self.search_recipes(alternatives)
-            return recommendations
 
         except Exception as e:
             print(f"Error parsing alternatives: {str(e)}")
-            return None
+            return {"error": str(e)}
 
     def google_search(self, query, **params):
         '''Performs single search query'''
@@ -116,7 +128,7 @@ class RecipeSearchService:
                 # Limit to just one page of results for testing
                 response = self.google_search(
                     query, 
-                    num=7)  # Limit to 10 results for testing
+                    num=5)
 
                 if 'items' in response:
                     search_results.extend(response.get('items', []))
@@ -125,18 +137,43 @@ class RecipeSearchService:
                     if search_results:
                         for entry in search_results:
                             if 'reddit' not in entry['link']:
-                                entry_info = {}
-                                entry_info['title'] = entry['title']
-                                entry_info['link'] = entry['link']
-                                sub_queries.append(entry_info)
+                                # Extract title and link as strings
+                                title = entry.get('title', 'No title available')
+                                link = entry.get('link', '#')
+                                
+                                # Create a description from the title
+                                description = f"A delicious {title.lower()} recipe"
+                                
+                                # Create a simple benefits string
+                                benefits = f"Healthy and nutritious {title.lower()}"
+                                
+                                sub_queries.append([description, benefits, link])
                     else:
                         print("No results found")
+                        # Add default values if no results found
+                        sub_queries.append([
+                            f"No description available for {pref}",
+                            f"No health benefits information available for {pref}",
+                            "#"
+                        ])
 
                 else:
                    print("No 'items' found in the response")
                    print(f"Response: {json.dumps(response, indent=2)}")
+                   # Add default values if no items found
+                   sub_queries.append([
+                       f"No description available for {pref}",
+                       f"No health benefits information available for {pref}",
+                       "#"
+                   ])
             except Exception as e:
                    print(f"Error in main execution: {str(e)}")
+                   # Add default values if an error occurs
+                   sub_queries.append([
+                       f"No description available for {pref}",
+                       f"No health benefits information available for {pref}",
+                       "#"
+                   ])
 
             recipe_queries[pref] = sub_queries
         return recipe_queries
