@@ -57,7 +57,7 @@ const Register = () => {
 
     return (
         <div className="register-page">
-            <div className="background-layer"></div> {/* New background layer */}
+    
             <Wave />
             <Logo />
             <div className="register-container">
