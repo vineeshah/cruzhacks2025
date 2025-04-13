@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Recipe.css';
+import Navbar from './Navbar';
 
 const Recipe = () => {
     const navigate = useNavigate();
@@ -83,8 +84,8 @@ const Recipe = () => {
 
     return (
         <div className="recipe-card">
-            
-            <div className="search-section">
+            <Navbar />
+            <div className="search-section1">
                 <h2>Find Healthier Alternatives</h2>
                 <form onSubmit={handleSearch} className="search-form">
                     <input

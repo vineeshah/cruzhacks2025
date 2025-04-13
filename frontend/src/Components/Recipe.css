@@ -1,11 +1,25 @@
+html {
+    background-color: #f5f5f5;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .recipe-card {
     background: white;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin: 20px;
     padding: 24px;
-    max-width: 800px;
-    margin: 20px auto;
+    width: 80%;
+    margin-top:200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
 }
 
 .recipe-header {
@@ -175,14 +189,15 @@
     background: #45a049;
 }
 
-.search-section {
+.search-section1 {
     background: #f8f9fa;
     padding: 24px;
     border-radius: 8px;
     margin-bottom: 24px;
+    width: 90%;
 }
 
-.search-section h2 {
+.search-section1 h2 {
     margin-top: 0;
     color: #333;
     font-size: 24px;

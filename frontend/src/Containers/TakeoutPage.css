@@ -121,13 +121,14 @@
     color: #666;
 }
 
-.error {
+.error-1 {
     color: #d32f2f;
     text-align: center;
     padding: 20px;
     background-color: #ffebee;
     border-radius: 4px;
     margin: 20px 0;
+    margin-top: 200px;
 }
 
 .no-restaurants {

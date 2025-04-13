@@ -4,6 +4,7 @@ import './TakeoutPage.css';
 import Navbar from '../Components/Navbar';
 
 const RestaurantCard = ({ restaurant }) => {
+    
     console.log('RestaurantCard received:', restaurant);
     return (
         <Link 
@@ -188,7 +189,7 @@ const TakeoutPage = () => {
         return (
             <div className="takeout-page">
                 <Navbar />
-                <div className="error">
+                <div className="error-1">
                     {locationError}
                     <div className="location-help">
                         <p>To enable location services:</p>
