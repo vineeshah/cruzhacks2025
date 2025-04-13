@@ -68,10 +68,11 @@ class RecipeSearchService:
                     
                     if search_results:
                         for entry in search_results:
-                            entry_info = {}
-                            entry_info['title'] = entry['title']
-                            entry_info['link'] = entry['link']
-                            sub_queries.append(entry_info)
+                            if 'reddit' not in entry['link']:
+                                entry_info = {}
+                                entry_info['title'] = entry['title']
+                                entry_info['link'] = entry['link']
+                                sub_queries.append(entry_info)
                     else:
                         print("No results found")
                 
