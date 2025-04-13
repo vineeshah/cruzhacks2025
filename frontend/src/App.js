@@ -6,12 +6,9 @@ import Register from './Containers/Register';
 import WelcomePage from './Containers/WelcomePage';
 import UserSelect from './Containers/UserSelectPage';
 import Takeout from './Containers/TakeoutPage';
-<<<<<<< Updated upstream
-=======
 import Navbar from './Components/Navbar';
 import RestaurantDetails from './Containers/RestaurantDetails';
 // import PrivateRoute from './Components/PrivateRoute';
->>>>>>> Stashed changes
 import './App.css';
 
 function App() {
