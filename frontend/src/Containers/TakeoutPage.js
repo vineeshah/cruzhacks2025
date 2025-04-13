@@ -1,7 +1,64 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './TakeoutPage.css';
 import Logo from '../Components/logo';
+
+const RestaurantCard = ({ restaurant }) => {
+    console.log('RestaurantCard received:', restaurant);
+    return (
+        <Link 
+            to={`/restaurants/${restaurant.place_id}`}
+            className="restaurant-card-link"
+        >
+            <div className="restaurant-card">
+                <div className="restaurant-header">
+                    <h3>{restaurant.name}</h3>
+                    <div className="restaurant-rating">
+                        <span>⭐ {restaurant.rating}</span>
+                        <span>{'$'.repeat(restaurant.price_level || 1)}</span>
+                    </div>
+                </div>
+                <p className="restaurant-address">{restaurant.address}</p>
+                
+                <div className="restaurant-details">
+                    <div className="health-score">
+                        <h4>Health Score: {restaurant.health_score}/100</h4>
+                        <div className="tags">
+                            {restaurant.health_keywords?.map((keyword, index) => (
+                                <span key={index} className="tag health-keyword">{keyword}</span>
+                            ))}
+                        </div>
+                    </div>
+                    
+                    <div className="user-preferences">
+                        <h4>Your Preferences:</h4>
+                        <div className="tags">
+                            {restaurant.user_preferences?.health_goals?.map((goal, index) => (
+                                <span key={index} className="tag health-goal">{goal}</span>
+                            ))}
+                            {restaurant.user_preferences?.dietary_restrictions?.map((restriction, index) => (
+                                <span key={index} className="tag dietary-restriction">{restriction}</span>
+                            ))}
+                        </div>
+                    </div>
+
+                    {restaurant.website && (
+                        <div className="menu-link">
+                            <a 
+                                href={restaurant.website} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="menu-button"
+                            >
+                                View Menu
+                            </a>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </Link>
+    );
+};
 
 const TakeoutPage = () => {
     const navigate = useNavigate();
@@ -55,17 +112,18 @@ const TakeoutPage = () => {
         }
     };
 
-    // Get location when component mounts
     useEffect(() => {
         getLocation();
     }, []);
 
-    // Fetch restaurants when location is available
     useEffect(() => {
         let isMounted = true;
 
         const fetchRestaurants = async () => {
-            if (!location) return;
+            if (!location) {
+                console.log('Location not available yet');
+                return;
+            }
 
             try {
                 const token = localStorage.getItem('token');
@@ -74,12 +132,13 @@ const TakeoutPage = () => {
                     return;
                 }
 
-                // Fetch restaurants
                 const response = await fetch(
-                    `http://localhost:5000/api/restaurants/search?lat=${location.lat}&lng=${location.lng}&radius=10`,
+                    `http://localhost:5000/api/restaurants/search?lat=${location.lat}&lng=${location.lng}&radius=4000`,
                     {
+                        method: 'GET',
                         headers: {
-                            'Authorization': `Bearer ${token}`
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
                         }
                     }
                 );
@@ -88,7 +147,6 @@ const TakeoutPage = () => {
 
                 if (response.ok) {
                     const data = await response.json();
-                    console.log(`Found ${data.length} restaurants`);
                     if (Array.isArray(data) && data.length > 0) {
                         setRestaurants(data);
                     } else {
@@ -101,7 +159,6 @@ const TakeoutPage = () => {
             } catch (error) {
                 if (!isMounted) return;
                 setError('An error occurred while fetching restaurants');
-                console.error('Error fetching restaurants:', error);
             } finally {
                 if (isMounted) {
                     setLoading(false);
@@ -140,18 +197,11 @@ const TakeoutPage = () => {
                             <li>Change the setting to "Allow"</li>
                             <li>Refresh this page</li>
                         </ol>
-                        <p>Alternatively, you can:</p>
-                        <ol>
-                            <li>Open your browser settings</li>
-                            <li>Search for "Location" or "Site permissions"</li>
-                            <li>Find this website in the list</li>
-                            <li>Change the location permission to "Allow"</li>
-                        </ol>
                     </div>
-                    <button className="retry-button" onClick={getLocation}>
-                        Try Again
-                    </button>
                 </div>
+                <button className="retry-button" onClick={getLocation}>
+                    Try Again
+                </button>
             </div>
         );
     }
@@ -183,20 +233,7 @@ const TakeoutPage = () => {
                 ) : (
                     <div className="restaurants-grid">
                         {restaurants.map((restaurant) => (
-                            <div key={restaurant.place_id} className="restaurant-card">
-                                <div className="restaurant-header">
-                                    <h3>{restaurant.name}</h3>
-                                    <div className="restaurant-rating">
-                                        {restaurant.rating ? `⭐ ${restaurant.rating}` : 'No rating'}
-                                    </div>
-                                </div>
-                                <div className="restaurant-address">
-                                    {restaurant.address}
-                                </div>
-                                <div className="restaurant-price">
-                                    {restaurant.price_level ? '💰'.repeat(restaurant.price_level) : 'Price not available'}
-                                </div>
-                            </div>
+                            <RestaurantCard key={restaurant.place_id} restaurant={restaurant} />
                         ))}
                     </div>
                 )}
