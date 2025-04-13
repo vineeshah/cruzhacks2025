@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './RestaurantDetails.css';
+import Navbar from '../Components/Navbar';
 
 const RestaurantDetails = () => {
     const { placeId } = useParams();
@@ -81,7 +82,9 @@ const RestaurantDetails = () => {
 
     return (
         <div className="restaurant-details-page">
-            <div className="restaurant-header">
+            <Navbar />
+            <div className='restaurant-profile'>
+            <div className="restaurant-header-profile">
                 <h1>{restaurant.name}</h1>
                 <div className="restaurant-meta">
                     <span className="rating">⭐ {restaurant.rating}</span>
@@ -100,9 +103,9 @@ const RestaurantDetails = () => {
                         </div>
                     </div>
                 )}
-
+                <div className="restaurant-profile-right">
                 <div className="preferences">
-                    <h3>Your Preferences</h3>
+                    <h3>Matched Preferences</h3>
                     <div className="tags">
                         {restaurant.user_preferences?.health_goals?.map((goal, index) => (
                             <span key={index} className="tag health-goal">{goal}</span>
@@ -115,19 +118,20 @@ const RestaurantDetails = () => {
 
                 {restaurant.website && (
                     <div className="menu-section">
-                        <h3>Menu</h3>
                         <a 
                             href={restaurant.website} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="menu-button"
+                            className="menu-button-profile"
                         >
                             View Full Menu
                         </a>
                     </div>
                 )}
+                </div>
             </div>
         </div>
+    </div>
     );
 };
 
