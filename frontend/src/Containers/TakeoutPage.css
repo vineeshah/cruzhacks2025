@@ -1,109 +1,156 @@
 .takeout-page {
-    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    min-height: 100vh;
+    background-color: #f5f5f5;
     max-width: 1200px;
     margin: 0 auto;
 }
 
 .takeout-content {
-    margin-top: 2rem;
+    width: 100%;
+    margin-top: 20px;
 }
 
 .takeout-content h1 {
     font-size: 2.5rem;
     color: #333;
     margin-bottom: 1rem;
+    text-align: center;
 }
 
 .subtitle {
     font-size: 1.2rem;
     color: #666;
-    margin-bottom: 2rem;
-}
-
-.loading, .error, .no-restaurants {
     text-align: center;
-    padding: 2rem;
-    font-size: 1.2rem;
-    color: #666;
-}
-
-.error {
-    color: #dc3545;
+    margin-bottom: 2rem;
 }
 
 .restaurants-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.restaurant-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.2s ease;
+}
+
+.restaurant-card-link:hover {
+    transform: translateY(-5px);
 }
 
 .restaurant-card {
     background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
     transition: transform 0.2s;
 }
 
 .restaurant-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-2px);
 }
 
 .restaurant-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 15px;
 }
 
 .restaurant-header h3 {
     margin: 0;
-    font-size: 1.5rem;
     color: #333;
+    font-size: 1.2em;
 }
 
 .restaurant-rating {
-    background: #f8f9fa;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-weight: bold;
-    color: #ffc107;
+    display: flex;
+    gap: 15px;
+    color: #666;
+    margin-top: 5px;
 }
 
 .restaurant-address {
     color: #666;
-    margin-bottom: 1rem;
+    margin-bottom: 15px;
 }
 
-.restaurant-health {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid #eee;
+.restaurant-types {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
-.restaurant-health h4 {
-    margin: 0 0 1rem 0;
-    color: #333;
+.type-tag {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 0.3rem 0.6rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
 }
 
-.restaurant-health ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.loading {
+    text-align: center;
+    padding: 20px;
+    color: #666;
 }
 
-.restaurant-health li {
-    margin-bottom: 1rem;
+.error {
+    color: #d32f2f;
+    text-align: center;
+    padding: 20px;
+    background-color: #ffebee;
+    border-radius: 4px;
+    margin: 20px 0;
+}
+
+.no-restaurants {
+    text-align: center;
+    color: #666;
+    margin: 2rem 0;
     padding: 1rem;
-    background: #f8f9fa;
-    border-radius: 5px;
+    background: #f5f5f5;
+    border-radius: 8px;
 }
 
-.restaurant-health li strong {
-    display: block;
-    margin-bottom: 0.5rem;
+.location-help {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    text-align: left;
+}
+
+.location-help ol {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+}
+
+.location-help li {
+    margin: 0.5rem 0;
     color: #333;
+}
+
+.retry-button {
+    background: #4caf50;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: background-color 0.2s ease;
+}
+
+.retry-button:hover {
+    background: #388e3c;
 }
 
 @media (max-width: 768px) {
@@ -114,4 +161,94 @@
     .restaurants-grid {
         grid-template-columns: 1fr;
     }
+}
+
+.restaurant-details {
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.restaurant-details h4 {
+    margin: 0.5rem 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.health-score {
+    margin-bottom: 15px;
+}
+
+.health-score h4 {
+    color: #2e7d32;
+    margin: 0 0 10px 0;
+    font-size: 1.1em;
+}
+
+.health-explanation {
+    color: #666;
+    font-size: 0.9em;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.user-preferences {
+    margin-bottom: 15px;
+}
+
+.user-preferences h4 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-size: 1em;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+}
+
+.health-goal {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.dietary-restriction {
+    background-color: #fff3e0;
+    color: #e65100;
+}
+
+.cuisine-types .tag {
+    background-color: #e3f2fd;
+    color: #1565c0;
+}
+
+.menu-link {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.menu-link a {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.menu-link a:hover {
+    background-color: #45a049;
+}
+
+.health-keyword {
+    background-color: #e3f2fd;
+    color: #1565c0;
 }

@@ -1,6 +1,6 @@
 from .auth import auth_bp
 from .user import user_bp
-from .restaurants import restaurant_bp
+from .restaurants import restaurants_bp
 from .food import food_bp
 from .recipes import recipe_bp
 
