@@ -8,7 +8,7 @@ import UserSelect from './Containers/UserSelectPage';
 import Takeout from './Containers/TakeoutPage';
 import Navbar from './Components/Navbar';
 import RestaurantDetails from './Containers/RestaurantDetails';
-import Recipe from './Components/Recipe';
+import Recipe from './Containers/Recipe';
 // import PrivateRoute from './Components/PrivateRoute';
 import './App.css';
 

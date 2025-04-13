@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Recipe.css';
+import Navbar from '../Components/Navbar';
 
 const Recipe = () => {
     const navigate = useNavigate();
@@ -83,7 +84,7 @@ const Recipe = () => {
 
     return (
         <div className="recipe-card">
-            <button onClick={handleBack} className="back-button">← Back</button>
+            <Navbar />
             
             <div className="search-section">
                 <h2>Find Healthier Alternatives</h2>
