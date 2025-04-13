@@ -5,11 +5,10 @@ from pathlib import Path
 import time
 import json
 import sys
-import google.generativeai as genai
-from config import Config
-from models.user import User
-
 sys.path.append(str(Path(__file__).parent.parent))
+import google.generativeai as genai
+from models.user import User
+from config import Config
 
 class RecipeSearchService:
     def __init__(self):
@@ -63,9 +62,10 @@ class RecipeSearchService:
             # Get recipe details for each alternative
             recipe_details = []
             for alt in alternatives:
-                recipe_info = self.search_recipes([alt])
+                recipe_info = self.search_recipes(alt)
                 if recipe_info and alt in recipe_info:
                     recipe_data = recipe_info[alt]
+                    print('helloooooooooooo', recipe_data[1])
                     recipe_details.append({
                         "recipe_name": alt,
                         "description": recipe_data[0] if len(recipe_data) > 0 else "No description available",
@@ -112,68 +112,73 @@ class RecipeSearchService:
                 #return create_mock_response(query)
 
 
-    def search_recipes(self, preferences):
-        '''Returns all recipes based on user's preferences'''
+    def search_recipes(self, food):
+        '''Returns recipe queries of inputted food'''
         recipe_queries = {}
-        for pref in preferences:
-            sub_queries = []
-            # Main execution
-            try:
-                print("Starting Google Search API test...")
-                # Test with a simple query first
-                query = pref + ' recipe'
-                print(f"Searching for: {query}")
+        query_keys = []
+        # Main execution
+        try:
+            print("Starting Google Search API test...")
+            # Test with a simple query first
+            query = food + ' recipe'
+            print(f"Searching for: {query}")
 
-                search_results = []
-                # Limit to just one page of results for testing
-                response = self.google_search(
-                    query, 
-                    num=5)
+            search_results = []
+            # Limit to just one page of results for testing
+            response = self.google_search(
+                query, 
+                num=10)
 
-                if 'items' in response:
-                    search_results.extend(response.get('items', []))
-                    print(f"Found {len(search_results)} results")
+            if 'items' in response:
+                search_results.extend(response.get('items', []))
+                print(f"Found {len(search_results)} results")
 
-                    if search_results:
-                        for entry in search_results:
-                            if 'reddit' not in entry['link']:
-                                # Extract title and link as strings
-                                title = entry.get('title', 'No title available')
-                                link = entry.get('link', '#')
-                                
-                                # Create a description from the title
-                                description = f"A delicious {title.lower()} recipe"
-                                
-                                # Create a simple benefits string
-                                benefits = f"Healthy and nutritious {title.lower()}"
-                                
-                                sub_queries.append([description, benefits, link])
-                    else:
-                        print("No results found")
-                        # Add default values if no results found
-                        sub_queries.append([
-                            f"No description available for {pref}",
-                            f"No health benefits information available for {pref}",
-                            "#"
-                        ])
-
+                if search_results:
+                    for entry in search_results:
+                        if 'reddit' not in entry['link']:
+                            print(entry)
+                            # Extract title and link as strings
+                            title = entry.get('title', 'No title available')
+                            link = entry.get('link', '#')
+                            
+                            # Create a description from the title
+                            description = f"A delicious {food.lower()} recipe"
+                            
+                            # Create a simple benefits string
+                            benefits = f"Healthy and nutritious {title.lower()}"
+                            
+                            query_keys.append([description, benefits, link])
                 else:
-                   print("No 'items' found in the response")
-                   print(f"Response: {json.dumps(response, indent=2)}")
-                   # Add default values if no items found
-                   sub_queries.append([
-                       f"No description available for {pref}",
-                       f"No health benefits information available for {pref}",
-                       "#"
-                   ])
-            except Exception as e:
-                   print(f"Error in main execution: {str(e)}")
-                   # Add default values if an error occurs
-                   sub_queries.append([
-                       f"No description available for {pref}",
-                       f"No health benefits information available for {pref}",
-                       "#"
-                   ])
+                    print("No results found")
+                    # Add default values if no results found
+                    query_keys.append([
+                        f"No description available for {food}",
+                        f"No health benefits information available for {food}",
+                        "#"
+                    ])
 
-            recipe_queries[pref] = sub_queries
+            else:
+                print("No 'items' found in the response")
+                print(f"Response: {json.dumps(response, indent=2)}")
+                # Add default values if no items found
+                query_keys.append([
+                    f"No description available for {food}",
+                    f"No health benefits information available for {food}",
+                    "#"
+                ])
+        except Exception as e:
+                print(f"Error in main execution: {str(e)}")
+                # Add default values if an error occurs
+                query_keys.append([
+                    f"No description available for {food}",
+                    f"No health benefits information available for {food}",
+                    "#"
+                ])
+
+        recipe_queries[food] = query_keys[0]
+        print('AHHHHHHHH', recipe_queries)
         return recipe_queries
+
+r = RecipeSearchService()
+search = r.search_recipes('pizza')
+print(search)
