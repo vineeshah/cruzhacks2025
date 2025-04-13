@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Logo from '../Components/logo';
+import Navbar from '../Components/Navbar';
 import { useNavigate } from 'react-router-dom';
 import './UserSelectPage.css';
 
@@ -43,13 +43,13 @@ const UserSelectPage = () => {
             alert("Please select an option to continue");
             return;
         }
-        // Navigate to the appropriate page based on selection
+
         navigate(`/${selectedOption}`);
     };
 
     return (
         <div className='user-select-page'>
-            <Logo />
+            <Navbar />
             <div className='user-select-content'>
                 <h1>What would you like to eat?</h1>
                 <p className="subtitle">Choose your preferred dining option</p>

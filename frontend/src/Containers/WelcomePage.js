@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import Logo from '../Components/logo';
 import { useNavigate } from 'react-router-dom';
 import './WelcomePage.css';
+import Navbar from '../Components/Navbar';
 
 const DietaryGoalCard = ({ goal, description, icon, isSelected, onClick }) => (
     <div 
@@ -98,7 +98,7 @@ const WelcomePage = () => {
         };
 
         fetchUserGoals();
-    }, [navigate]); // Only run when component mounts or navigate changes
+    }, [navigate]); 
 
     const toggleGoal = (goalId) => {
         setSelectedGoals(prevSelected => {
@@ -127,7 +127,7 @@ const WelcomePage = () => {
                 return;
             }
 
-            // Update user preferences
+            
             const response = await fetch('http://localhost:5000/api/user/preferences', {
                 method: 'PUT',
                 headers: {
@@ -154,9 +154,9 @@ const WelcomePage = () => {
 
     return (
         <div className='welcome-page'>
-            <Logo />
+            <Navbar />
             <div className='welcome-content'>
-                <h1>Welcome to Healthify!</h1>
+                <h1>Welcome to IdealMeal!</h1>
                 <p className="subtitle">Select your health goals (choose all that apply)</p>
                 {error && <div className="error-message">{error}</div>}
                 <div className="dietary-goals-grid">
