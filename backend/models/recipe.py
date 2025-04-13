@@ -1,33 +1,75 @@
-from datetime import datetime
-from bson import ObjectId
-from run import mongo
+from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from services.recipe_search import RecipeSearchService
+from models.user import User
 
-class Recipe:
-    @staticmethod
-    def create(name, ingredients, instructions, nutrition_info, difficulty, prep_time, cook_time, tags=None):
-        recipe = {
-            "name": name,
-            "ingredients": ingredients,  # List of dicts with ingredient name, amount, unit
-            "instructions": instructions,  # List of steps
-            "nutrition_info": nutrition_info,
-            "difficulty": difficulty,  # "easy", "medium", "hard"
-            "prep_time": prep_time,  # In minutes
-            "cook_time": cook_time,  # In minutes
-            "tags": tags or [],  # e.g., ["healthy", "quick", "vegetarian"]
-            "created_at": datetime.utcnow(),
-            "updated_at": datetime.utcnow()
-        }
-        result = mongo.db.recipes.insert_one(recipe)
-        recipe["_id"] = result.inserted_id
-        return recipe
+
+recipe_bp = Blueprint('recipe', __name__, url_prefix='/api/recipes')
+rec_service = RecipeSearchService()
+
+@recipe_bp.route('/recommend', methods=['GET'])
+@jwt_required()
+def recommend_recipes():
+    '''Finds user preferences, calls recipe_search service to search for recipes based on user's preferences'''
+    try:
+        user_id = get_jwt_identity()
+        
+        # Get user preferences
+        user = User.find_by_id(user_id)
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+        
+        user_preferences = []
+        health_goals = user.get('health_goals', [])
+        dietary_restrictions = user.get('dietary_restrictions', [])
+
+        if health_goals is not []:
+            for goal in health_goals:
+                user_preferences.append(goal)
+
+        if dietary_restrictions is not []:
+            for entry in dietary_restrictions:
+                user_preferences.append(entry)
+
+        recommendations = rec_service.search_recipes(user_preferences)
+        return jsonify(recommendations), 200
     
-    @staticmethod
-    def find_by_id(recipe_id):
-        return mongo.db.recipes.find_one({"_id": ObjectId(recipe_id)})
-    
-    @staticmethod
-    def search(query, tags=None, limit=10):
-        search_query = {"name": {"$regex": query, "$options": "i"}}
-        if tags:
-            search_query["tags"] = {"$in": tags}
-        return list(mongo.db.recipes.find(search_query).limit(limit))
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+'''
+@recipe_bp.route('/analyze', methods=['POST'])
+@jwt_required()
+def analyze_recipe():
+    try:
+        data = request.get_json()
+        recipe_name = data.get('recipe_name')
+        ingredients = data.get('ingredients', [])
+        
+        if not recipe_name:
+            return jsonify({"error": "Recipe name is required"}), 400
+        
+        analysis = rec_service.analyze_recipe_health(recipe_name, ingredients)
+        return jsonify(analysis)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@recipe_bp.route('/alternatives', methods=['POST'])
+@jwt_required()
+def get_recipe_alternatives():
+    try:
+        data = request.get_json()
+        recipe_name = data.get('recipe_name')
+        ingredients = data.get('ingredients', [])
+        user_id = get_jwt_identity()
+        
+        if not recipe_name:
+            return jsonify({"error": "Recipe name is required"}), 400
+        
+        alternatives = rec_service.get_recipe_recommendations(recipe_name, ingredients, user_id)
+        return jsonify(alternatives)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+'''
