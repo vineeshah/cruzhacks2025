@@ -1,5 +1,3 @@
-# cruzhacks2025
-
 # IdealMeal
 
 Your personal guide to healthier eating, connecting you directly to healthier alternatives for any food craving.
